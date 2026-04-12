@@ -27,6 +27,7 @@ public class QuestionService {
         List<Question> questions = questionRepository.findByCategory(category) ; 
         if (questions.size() < numOfQuestions) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            
         }
         List<String> questionIds = questions.stream().limit(numOfQuestions).map(Question::getId).toList();
         return new ResponseEntity<>(questionIds, HttpStatus.OK);
