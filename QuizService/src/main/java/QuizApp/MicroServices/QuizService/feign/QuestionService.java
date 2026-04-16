@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import QuizApp.MicroServices.QuizService.Model.Question;
 
-@FeignClient(name = "QuestionService")
+@FeignClient(name = "QuestionService", fallback = QuestionServiceFallback.class)
 public interface QuestionService {
     // this interface will be used to call the Question Service to get questions for the quiz
       @PostMapping("/api/questions/getQuestionforQuiz")

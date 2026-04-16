@@ -12,6 +12,7 @@ import QuizApp.MicroServices.QuizService.Model.Question;
 import QuizApp.MicroServices.QuizService.Model.Quiz;
 import QuizApp.MicroServices.QuizService.Repository.QuizRepository;
 import QuizApp.MicroServices.QuizService.feign.QuestionService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Service
 public class QuizService {
@@ -19,10 +20,11 @@ public class QuizService {
     private QuizRepository quizRepository ;
     @Autowired
     private QuestionService questionService ;
+    @CircuitBreaker(name = "quizService", fallbackMethod = "createQuizFallback")
     public ResponseEntity<Quiz> createQuiz(String category , String title , int numOfQuestions , String createdBy){
         
-     List<String> allQuestions = questionService.getQuestionForQuiz(category, numOfQuestions).getBody();
-     
+        ResponseEntity<List<String>> response = questionService.getQuestionForQuiz(category, numOfQuestions);
+        List<String> allQuestions = response.getBody();
     
      Quiz quiz = new Quiz();
         quiz.setTitle(title);
@@ -32,6 +34,15 @@ public class QuizService {
         quizRepository.save(quiz);
        return new ResponseEntity<>(quiz, HttpStatus.CREATED);
     }   
+      public ResponseEntity<Quiz>  createQuizFallback(String category , String title , int numOfQuestions , String createdBy , Throwable e){
+        System.out.println("Question Service is down. Falling back to create quiz without questions.");
+        Quiz quiz = new Quiz();
+        quiz.setTitle(title);
+        quiz.setCategory(category);
+        quiz.setQuestions(new ArrayList<>());
+        quiz.setCreatedBy(createdBy);
+       return new ResponseEntity<>(quiz, HttpStatus.CREATED);
+      }
    
     public ResponseEntity<List<Quiz>> getAllQuizzes(){
         return new ResponseEntity<>(quizRepository.findAll(), HttpStatus.OK);
@@ -39,6 +50,7 @@ public class QuizService {
      public ResponseEntity<List<Quiz>> getAllQuizzesByCategory(String category){
         return new ResponseEntity<>(quizRepository.findByCategory(category), HttpStatus.OK);
     }
+    @CircuitBreaker(name = "quizService", fallbackMethod = "getQuizByIdFallback")
     public ResponseEntity<List<Question>> getQuizById(String id){
         Quiz quiz = quizRepository.findById(id).orElse(null);
         if(quiz == null){
@@ -55,6 +67,10 @@ public class QuizService {
         Collections.shuffle(questions);
         return new ResponseEntity<>(questions, HttpStatus.OK);
     }
+        public ResponseEntity<List<Question>> getQuizByIdFallback(String id , Throwable e){
+            System.out.println("Question Service is down. Falling back to return empty question list for quiz id: " + id);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        }
    
     
 }
