@@ -16,7 +16,8 @@ public class QuestionServiceFallback implements QuestionService {
     public ResponseEntity<List<String>> getQuestionForQuiz(String category, int numOfQuestions) {
         System.out.println("🔥 Feign fallback hit: getQuestionForQuiz");
 
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        throw new RuntimeException("Question Service is currently unavailable. Please try again later.");
+
     }
 
     @Override

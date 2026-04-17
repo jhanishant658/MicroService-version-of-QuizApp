@@ -24,7 +24,6 @@ public class QuizController {
          try {
            return quizService.createQuiz(category, title, numOfQuestions, createdBy) ;
         } catch (Exception e) {
-           e.printStackTrace();
             return ResponseEntity.status(500).build();
         }
         

@@ -13,6 +13,7 @@ import QuizApp.MicroServices.QuizService.Model.Quiz;
 import QuizApp.MicroServices.QuizService.Repository.QuizRepository;
 import QuizApp.MicroServices.QuizService.feign.QuestionService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 
 @Service
 public class QuizService {
@@ -20,7 +21,8 @@ public class QuizService {
     private QuizRepository quizRepository ;
     @Autowired
     private QuestionService questionService ;
-    @CircuitBreaker(name = "quizService", fallbackMethod = "createQuizFallback")
+    @Retry(name = "QuestionService")
+    @CircuitBreaker(name = "QuestionServicegetQuestionForQuizStringint", fallbackMethod = "createQuizFallback")
     public ResponseEntity<Quiz> createQuiz(String category , String title , int numOfQuestions , String createdBy){
         
         ResponseEntity<List<String>> response = questionService.getQuestionForQuiz(category, numOfQuestions);
@@ -34,15 +36,18 @@ public class QuizService {
         quizRepository.save(quiz);
        return new ResponseEntity<>(quiz, HttpStatus.CREATED);
     }   
-      public ResponseEntity<Quiz>  createQuizFallback(String category , String title , int numOfQuestions , String createdBy , Throwable e){
-        System.out.println("Question Service is down. Falling back to create quiz without questions.");
+     public ResponseEntity<Quiz> createQuizFallback(String category, String title, int numOfQuestions, String createdBy, Throwable e) {
+        System.out.println("✅ FALLBACK CALLED - createQuizFallback");
+        System.out.println("Exception type: " + e.getClass().getName());
+        System.out.println("Exception message: " + e.getMessage());
+        
         Quiz quiz = new Quiz();
         quiz.setTitle(title);
         quiz.setCategory(category);
         quiz.setQuestions(new ArrayList<>());
         quiz.setCreatedBy(createdBy);
-       return new ResponseEntity<>(quiz, HttpStatus.CREATED);
-      }
+        return new ResponseEntity<>(quiz, HttpStatus.CREATED);
+    }
    
     public ResponseEntity<List<Quiz>> getAllQuizzes(){
         return new ResponseEntity<>(quizRepository.findAll(), HttpStatus.OK);
