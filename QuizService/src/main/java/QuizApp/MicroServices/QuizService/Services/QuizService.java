@@ -33,13 +33,14 @@ public class QuizService {
         quiz.setCategory(category);
         quiz.setQuestions(allQuestions);
         quiz.setCreatedBy(createdBy);
-        quizRepository.save(quiz);
+       
         if(quiz.getQuestions().isEmpty()){
             System.out.println("⚠️ No questions received from Question Service for category: " + category);
             return new ResponseEntity<>(quiz, HttpStatus.BAD_REQUEST);
         } else {
             System.out.println("✅ Received " + quiz.getQuestions().size() + " questions for quiz: " + title);
         }
+         quizRepository.save(quiz);
        return new ResponseEntity<>(quiz, HttpStatus.CREATED);
     }   
      public ResponseEntity<Quiz> createQuizFallback(String category, String title, int numOfQuestions, String createdBy, Throwable e) {
