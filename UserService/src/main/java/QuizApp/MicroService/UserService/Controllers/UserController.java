@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/users")
 public class UserController {
     @Autowired
     private UserService userService;
         @PostMapping("/login")
         public String getMethodName(@RequestBody User user) {
-            return userService.login(user.getEmail(), user.getPassword());
+            return userService.login(user.getEmail(), user.getPassword() , user.getRole());
         }
 
         @PostMapping("/register")

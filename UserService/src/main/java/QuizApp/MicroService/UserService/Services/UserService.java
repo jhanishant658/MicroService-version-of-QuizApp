@@ -25,11 +25,11 @@ public class UserService {
         userRepository.save(user);
         return "User registered successfully";
     }
-    public String login(String email , String password) {
+    public String login(String email , String password,String role) {
         try {
           PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
           if(userRepository.findByEmail(email).isPresent() && passwordEncoder.matches(password, userRepository.findByEmail(email).get().getPassword())){
-            return jwtUtil.generateToken(email);
+            return jwtUtil.generateToken(email ,role );
           }
         } catch (Exception e) {
             e.printStackTrace();
