@@ -44,7 +44,7 @@ public class JwtGatewayFilter implements GlobalFilter {
         if (path.contains("/admin") && !"ADMIN".equals(role)) {
             throw new RuntimeException("Access Denied");
         }
-
+       
         return chain.filter(exchange);
     }
 }

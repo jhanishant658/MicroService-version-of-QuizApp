@@ -50,7 +50,12 @@ public class QuestionController {
     }
     @PostMapping("/getQuestionforQuiz")
     public ResponseEntity<List<String>> getQuestionForQuiz(@RequestParam String categories , @RequestParam int numOfQuestions){
-        throw new RuntimeException("Simulated failure in Question Service");
+        try {
+            return questionService.getQuestionForQuiz(categories, numOfQuestions);
+        } catch (Exception e) {
+           e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
     }
     @PostMapping("/id")
     public ResponseEntity<Question> getQuestionById(@RequestParam String id){

@@ -5,7 +5,6 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -26,34 +25,5 @@ public class JwtUtil {
                 .signWith(key)
                 .compact();
     }
-
-    // 🔥 Extract Username
-    public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
-    }
-
-    // 🔥 Extract Expiration
-    public Date extractExpiration(String token) {
-        return extractAllClaims(token).getExpiration();
-    }
-
-    // 🔥 Extract all claims
-    private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    // 🔥 Check Expiry
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    // 🔥 Validate Token (MOST IMPORTANT)
-    public boolean validateToken(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
-    }
+   //Extract process is under api gateway, so we don't need to implement it here in user service. But if needed, we can add
 }
