@@ -62,9 +62,9 @@ public class QuestionController {
         }
     }
     @PostMapping("/getMarks")
-    public ResponseEntity<Integer> getMarks(@RequestBody QuizAnsResponse quizAnsRes){
+    public ResponseEntity<Integer> getMarks(@RequestBody List<QuizAnsResponse> quizAnsRes){
         try {
-            return questionService.getMarks(quizAnsRes.getQuestionId(), quizAnsRes.getSelectedAnswer());
+            return questionService.getMarks(quizAnsRes);
         } catch (Exception e) {
            e.printStackTrace();
             return ResponseEntity.status(500).build();

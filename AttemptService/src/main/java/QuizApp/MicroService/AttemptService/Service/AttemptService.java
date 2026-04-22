@@ -19,16 +19,13 @@ public class AttemptService {
     @Autowired
     private QuestionSercvice questionSercvice;
     public String calculateMarks(String quizId , String userId , List<QuizAnsResponse> quizAnsRes) {
-        int totalMarks = 0 ; 
-        for(QuizAnsResponse ans : quizAnsRes) {
-            totalMarks += questionSercvice.getMarks(ans).getBody();
-        }
+        int totalMarks = questionSercvice.getMarks(quizAnsRes).getBody();
         Attempt attempt = new Attempt();
         attempt.setUserId(userId);
         attempt.setQuizId(quizId);
         attempt.setTotalscore(totalMarks);
         attempt.setTotalMarks(quizAnsRes.size());
-        attemptRepository.save(attempt);
+       attemptRepository.save(attempt);
         return "Marks calculated successfully";
     }
     public List<Attempt> getAttemptsByUserId(String userId) {

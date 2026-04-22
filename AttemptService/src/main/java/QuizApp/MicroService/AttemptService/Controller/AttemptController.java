@@ -35,6 +35,7 @@ public class AttemptController {
   public List<Attempt> getUserAttempts(@RequestParam String userId) {
     return attemptService.getAttemptsByUserId(userId);
   }
+  // done avg response time of api on 1000 request for this route is 110 ms
     @GetMapping("/attemptDetails")
     public Attempt getAttemptDetails(@RequestParam @NonNull String attemptId) {
         return attemptService.getAttemptById(attemptId);

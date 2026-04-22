@@ -2,7 +2,7 @@ package QuizApp.MicroService.QuestionService.Models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import org.springframework.data.mongodb.core.index.Indexed;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -12,9 +12,11 @@ import lombok.Data;
 @Data
 public class Question {
  @Id
+ @Indexed(unique = true)
   private String id ; 
   @NotBlank(message = "Level cannot be blank")
   private String level ; 
+  @Indexed
   @NotBlank(message = "Category cannot be blank")
   private String category ; 
   @NotBlank(message = "Question text cannot be blank")
