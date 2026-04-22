@@ -12,5 +12,6 @@ public class Attempt {
     private String id;
     private String userId;
     private String quizId;
-    private int score;
+    private int totalscore;
+    private int totalMarks;
 }
