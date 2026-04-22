@@ -3,6 +3,7 @@ package QuizApp.MicroService.AttemptService.Service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import QuizApp.MicroService.AttemptService.Entity.Attempt;
@@ -34,11 +35,9 @@ public class AttemptService {
         return attemptRepository.findByUserId(userId);
     }
     public List<Attempt> getLeaderBoard(String quizId){
-        List<Attempt>attempts = attemptRepository.findByQuizId(quizId);
-        attempts.sort((a1, a2) -> Integer.compare(a2.getTotalscore(), a1.getTotalscore()));
-        return attempts;
+        return attemptRepository.findByQuizIdOrderByTotalscoreDesc(quizId);
     }
-    puYblic Attempt getAttemptById(String attemptId) {
+    public Attempt getAttemptById(@NonNull String attemptId) {
         return attemptRepository.findById(attemptId).orElse(null);
     }
 }

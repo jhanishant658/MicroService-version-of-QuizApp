@@ -11,8 +11,6 @@ import QuizApp.MicroService.AttemptService.Entity.Attempt;
 public interface AttemptRepository extends MongoRepository<Attempt , String> {
 
     List<Attempt> findByUserId(String userId);
-
-    List<Attempt> findByQuizId(String quizId);
-
+    List<Attempt> findByQuizIdOrderByTotalscoreDesc(String quizId);
     
 } 

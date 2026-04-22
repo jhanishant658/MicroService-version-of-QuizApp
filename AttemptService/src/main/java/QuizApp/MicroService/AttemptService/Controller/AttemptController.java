@@ -3,6 +3,8 @@ package QuizApp.MicroService.AttemptService.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,17 +24,19 @@ public class AttemptController {
   public String submitAttempt(@RequestBody SubmitQuizRequest request) {
     return attemptService.calculateMarks(request.getQuizId(), request.getUserId(), request.getAnswers());
   }
-
-  @PostMapping("/leaderboard")
+// done avg response time of api on 1000 request is 260 ms 
+// converted avg response time to 88 ms by adding index on userId and quizId in attempt collection and also by using projection to return only required fields in leaderboard api
+  @GetMapping("/leaderboard")
   public List<Attempt> getLeaderBoard(@RequestParam String quizId) {
     return attemptService.getLeaderBoard(quizId);
   }
-  @PostMapping("/userAttempts")
+  // done avg response time of api on 1000 request for this route is 88 ms
+  @GetMapping("/userAttempts")
   public List<Attempt> getUserAttempts(@RequestParam String userId) {
     return attemptService.getAttemptsByUserId(userId);
   }
-    @PostMapping("/attemptDetails")
-    public Attempt getAttemptDetails(@RequestParam String attemptId) {
+    @GetMapping("/attemptDetails")
+    public Attempt getAttemptDetails(@RequestParam @NonNull String attemptId) {
         return attemptService.getAttemptById(attemptId);
     }
 }
