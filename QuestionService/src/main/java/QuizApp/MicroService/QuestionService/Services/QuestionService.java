@@ -8,13 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import QuizApp.MicroService.QuestionService.Models.Question;
 import QuizApp.MicroService.QuestionService.Repositories.QuestionRepository;
 import QuizApp.MicroService.QuestionService.Repositories.QuestionRepository.QuestionIdOnly;
 import QuizApp.MicroService.QuestionService.Response.QuizAnsResponse;
+import jakarta.validation.Valid;
 
 @Service
+@Validated
 public class QuestionService {
     @Autowired 
     private QuestionRepository questionRepository ;
@@ -24,7 +27,7 @@ public class QuestionService {
     public ResponseEntity<List<Question>> getQuestionByCategory(String category){
         return new ResponseEntity<>(questionRepository.findByCategory(category), HttpStatus.OK);
     }
-    public ResponseEntity<Question> addQuestion(Question question){
+    public ResponseEntity<Question> addQuestion(@Valid Question question){
         return new ResponseEntity<>(questionRepository.save(question), HttpStatus.CREATED);
     }
     public ResponseEntity<List<String>> getQuestionForQuiz(String category, int numOfQuestions) {
